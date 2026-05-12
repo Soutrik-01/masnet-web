@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Monotone and Separable Set Functions — MASNET</title>
+  <meta name="description" content="Characterizations and neural models for monotone-and-separating set-to-vector maps. NeurIPS 2025." />
+
+  <!-- MathJax 3 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      chtml: { scale: 1.0 },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,600;9..144,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <style>
+    :root {
+      --bg:         #fbfaf6;
+      --bg-soft:    #f4f1e8;
+      --ink:        #1a1816;
+      --ink-soft:   #4a4640;
+      --ink-mute:   #7a746a;
+      --rule:       #d9d2c2;
+      --rule-soft:  #e8e2d2;
+      --accent:     #7a3528;
+      --accent-soft:#a85949;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Crimson Pro', Charter, Georgia, serif;
+      font-size: 20px;
+      line-height: 1.65;
+      font-feature-settings: "kern", "liga", "onum";
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5.5rem 1.6rem 7rem;
+    }
+
+    /* ---------- HEADER ---------- */
+    .conf-line {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 9;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .conf-line::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+    h1.title {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 30;
+      font-size: 3.1rem;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: -0.012em;
+      margin: 0 0 0.7rem;
+    }
+    p.subtitle {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 36;
+      font-size: 1.45rem;
+      line-height: 1.3;
+      color: var(--ink-soft);
+      font-style: italic;
+      margin: 0 0 2.2rem;
+    }
+    .authors {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 24;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin: 0 0 1.4rem;
+    }
+    .authors .name { color: var(--ink); font-weight: 500; }
+    .authors .aff  { color: var(--ink-mute); font-size: 0.95em; }
+    .authors .star { color: var(--accent); font-size: 0.8em; vertical-align: super; }
+    .authors .note {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--ink-mute);
+      margin-top: 0.5rem;
+    }
+    .links {
+      font-family: 'Fraunces', serif;
+      margin: 2rem 0 0;
+      padding-top: 1.3rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 1.8rem;
+    }
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      padding: 0.2rem 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .links a:hover { color: var(--accent-soft); border-bottom-color: var(--accent-soft); }
+
+    /* ---------- BODY ---------- */
+    p { margin: 1.2rem 0; }
+    p.lead { font-size: 1.05rem; margin-top: 3rem; }
+    p.lead::first-letter {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 50;
+      font-weight: 500;
+      font-size: 4.6em;
+      line-height: 0.85;
+      float: left;
+      margin: 0.08em 0.1em 0 0;
+      color: var(--accent);
+    }
+    strong { font-weight: 600; color: var(--ink); }
+    em { font-style: italic; }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    a:hover { color: var(--accent-soft); border-bottom-color: var(--accent-soft); }
+
+    /* ---------- HEADINGS ---------- */
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 48, "SOFT" 20;
+      font-size: 1.75rem;
+      font-weight: 500;
+      letter-spacing: -0.012em;
+      margin: 4rem 0 1.1rem;
+      line-height: 1.2;
+      position: relative;
+    }
+    h2 .num {
+      position: absolute;
+      left: -3rem;
+      top: 0.55rem;
+      font-family: 'Fraunces', serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+    }
+    h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 24;
+      font-size: 1.2rem;
+      font-style: italic;
+      font-weight: 500;
+      margin: 2.6rem 0 0.4rem;
+    }
+
+    /* ---------- THEOREM DISPLAYS ---------- */
+    .display {
+      margin: 2rem 0;
+      padding: 1.1rem 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .display-label {
+      font-family: 'Fraunces', serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .display-title {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+    .display-body {
+      font-style: italic;
+      color: var(--ink-soft);
+      margin-top: 0.4rem;
+      font-size: 1.02rem;
+    }
+    .display-body p { margin: 0.5rem 0; color: var(--ink-soft); }
+    .display-body p:first-child { margin-top: 0; }
+    .display-body p:last-child { margin-bottom: 0; }
+    .display-body em { font-style: normal; color: var(--ink); font-weight: 500; }
+
+    /* ---------- INTUITION BLOCK ---------- */
+    .intuition {
+      margin: -0.4rem 0 1.8rem 1.5rem;
+      padding-left: 1.2rem;
+      border-left: 2px solid var(--rule-soft);
+      color: var(--ink-soft);
+      font-size: 0.96rem;
+      line-height: 1.62;
+    }
+    .intuition::before {
+      content: "Intuition. ";
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ---------- DEFINITION LIST ---------- */
+    .defs {
+      margin: 1.4rem 0;
+      padding: 1.4rem 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .defs dl { margin: 0; }
+    .defs dt {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0.6rem 0 0;
+      font-size: 1rem;
+    }
+    .defs dt:first-of-type { margin-top: 0; }
+    .defs dd {
+      margin: 0.2rem 0 0.7rem 0;
+      color: var(--ink-soft);
+      font-size: 0.98rem;
+    }
+    .defs dd:last-of-type { margin-bottom: 0; }
+
+    /* ---------- VARIANTS ---------- */
+    .variants { margin: 1.5rem 0; }
+    .variant {
+      margin: 1.4rem 0;
+      padding-left: 1.2rem;
+      border-left: 2px solid var(--rule);
+    }
+    .variant-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--accent);
+      font-size: 1.02rem;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    /* ---------- TABLES ---------- */
+    .tablewrap { margin: 1.6rem -0.4rem; overflow-x: auto; }
+    table {
+      border-collapse: collapse;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 14, "wght" 400;
+      font-size: 0.92rem;
+      width: 100%;
+      min-width: 480px;
+      color: var(--ink-soft);
+    }
+    th, td {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      border-bottom: 1px solid var(--rule-soft);
+      vertical-align: top;
+    }
+    thead th {
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      border-bottom: 1px solid var(--ink-soft);
+      padding-bottom: 0.5rem;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    td.center, th.center { text-align: center; }
+    td strong { color: var(--ink); font-weight: 600; }
+
+    /* ---------- FIGURES ---------- */
+    figure { margin: 2.6rem 0; }
+    figure svg, figure img {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+    figcaption {
+      font-family: 'Fraunces', serif;
+      font-size: 0.88rem;
+      color: var(--ink-mute);
+      margin-top: 1rem;
+      line-height: 1.55;
+      font-style: italic;
+      padding: 0 0.3rem;
+    }
+    figcaption .num {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
+
+    /* ---------- IMAGE PLACEHOLDERS ---------- */
+    .placeholder {
+      border: 2px dashed var(--rule);
+      background: var(--bg-soft);
+      padding: 2.6rem 1.5rem;
+      text-align: center;
+      border-radius: 4px;
+      color: var(--ink-mute);
+    }
+    .placeholder-label {
+      font-family: 'Fraunces', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 0.6rem;
+    }
+    .placeholder-desc {
+      font-style: italic;
+      color: var(--ink-soft);
+      margin: 0.3rem 0 0.9rem;
+      font-size: 1rem;
+    }
+    .placeholder-instr {
+      font-size: 0.78rem;
+      color: var(--ink-mute);
+      font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .placeholder-instr code {
+      background: white;
+      padding: 1px 5px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      font-size: 0.92em;
+    }
+
+    /* ---------- DIVIDER ---------- */
+    .hr-orn {
+      text-align: center;
+      margin: 4rem 0;
+      color: var(--ink-mute);
+      font-size: 0.85rem;
+    }
+    .hr-orn::before { content: "✦"; }
+
+    /* ---------- BIBTEX ---------- */
+    pre.bibtex {
+      font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      background: var(--bg-soft);
+      border: 1px solid var(--rule);
+      padding: 1.1rem 1.3rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      color: var(--ink-soft);
+      margin: 1.2rem 0;
+    }
+
+    /* ---------- CONTACT ---------- */
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.6rem;
+      font-family: 'Fraunces', serif;
+      font-size: 0.95rem;
+      margin: 1.2rem 0;
+    }
+    .contact-grid a {
+      color: var(--accent);
+      border-bottom: 1px solid transparent;
+    }
+    .contact-grid a:hover { border-bottom-color: var(--accent-soft); }
+
+    /* ---------- FOOTER ---------- */
+    footer.colophon {
+      margin-top: 5rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--rule);
+      font-family: 'Fraunces', serif;
+      font-size: 0.82rem;
+      color: var(--ink-mute);
+      font-style: italic;
+      line-height: 1.6;
+    }
+    footer.colophon a { color: var(--ink-mute); border-bottom-color: var(--rule); }
+    footer.colophon a:hover { color: var(--ink-soft); }
+
+    /* ---------- MathJax ---------- */
+    mjx-container { font-size: 1em !important; }
+    mjx-container[display="true"] {
+      margin: 1.3rem 0 !important;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 700px) {
+      body { font-size: 18px; }
+      .page { padding: 3rem 1.2rem 4rem; }
+      h1.title { font-size: 2.1rem; }
+      p.subtitle { font-size: 1.15rem; }
+      h2 { font-size: 1.45rem; margin: 3rem 0 0.9rem; }
+      h2 .num { position: static; display: block; margin-bottom: 0.3rem; }
+      p.lead::first-letter { font-size: 3.6em; }
+      .placeholder { padding: 1.8rem 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+<main class="page">
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <div class="conf-line">NeurIPS 2025</div>
+
+  <h1 class="title">Monotone and Separable Set Functions</h1>
+  <p class="subtitle">Characterizations and Neural Models</p>
+
+  <p class="authors">
+    <span class="name">Soutrik Sarangi</span><span class="star">∗</span> <span class="aff">IIT Bombay</span> &nbsp;·&nbsp;
+    <span class="name">Yonatan Sverdlov</span><span class="star">∗</span> <span class="aff">Technion</span> &nbsp;·&nbsp;
+    <span class="name">Nadav Dym</span> <span class="aff">Technion</span> &nbsp;·&nbsp;
+    <span class="name">Abir De</span> <span class="aff">IIT Bombay</span>
+    <span class="note"><span class="star">∗</span> Equal contribution.</span>
+  </p>
+
+  <div class="links">
+    <a href="https://openreview.net/pdf?id=RSSk1SHxrH">Paper</a>
+    <a href="https://github.com/structlearning/MASNET">Code</a>
+    <a href="#bibtex">BibTeX</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <!-- ============================================================
+       LEAD
+  ============================================================ -->
+  <p class="lead">
+    We study set-to-vector maps $F$ that preserve the natural partial order on multisets:
+    $S \subseteq T \iff F(S) \le F(T)$. We call these <strong>Monotone and Separating
+    (MAS)</strong> functions. We give tight bounds on the embedding dimension needed for MAS
+    to exist, show that no such map exists for infinite ground sets, and introduce
+    <strong>MASNET</strong> — a DeepSets-shaped model satisfying a probabilistic relaxation
+    with provable Hölder stability.
+  </p>
+
+  <!-- ============================================================
+       § 1 — DEFINITIONS
+  ============================================================ -->
+  <h2><span class="num">§ 1</span>Monotone, Separable, MAS</h2>
+
+  <p>
+    Let $V$ be the ground set and $\mathcal{P}_{<\infty}(V)$ the collection of finite multisets
+    over $V$. Multiset containment uses multiplicities: $S \subseteq T$ iff $c_S(v) \le c_T(v)$ for
+    all $v \in V$. Vector dominance is coordinatewise.
+  </p>
+
+  <div class="defs">
+    <dl>
+      <dt>Monotone.</dt>
+      <dd>$S \subseteq T \;\Rightarrow\; F(S) \le F(T)$.</dd>
+      <dt>Separable.</dt>
+      <dd>$F(S) \le F(T) \;\Rightarrow\; S \subseteq T$.</dd>
+      <dt>MAS.</dt>
+      <dd>Both. The vector order on the image reproduces multiset containment exactly.</dd>
+    </dl>
+  </div>
+
+  <p>
+    Every MAS function is injective, but injectivity is much cheaper: $m = 1$ is enough for
+    injectivity, while — as the next section shows — MAS needs far more, and on infinite ground
+    sets is impossible.
+  </p>
+
+  <!-- ============================================================
+       § 2 — EXISTENCE
+  ============================================================ -->
+  <h2><span class="num">§ 2</span>When Does a MAS Function Exist?</h2>
+
+  <p>
+    Let $m^\star(V, k)$ be the smallest output dimension admitting a MAS function
+    $F : \mathcal{P}_{\le k}(V) \to \mathbb{R}^m$.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 1 · finite $V$, unbounded $k$</div>
+    <div class="display-title">If $|V| = n$, then $m^\star(V, \infty) = n$.</div>
+  </div>
+
+  <p class="intuition">
+    One-hot encoding $F(S) = \sum_{s \in S} e_s$ does it (upper bound). For the lower bound,
+    suppose $m < n$. For each output coordinate $i$, pick the singleton that maximises
+    $F(\{v\})[i]$ and collect these "max-elements" into a set $T$. Since $m < n$, some $u \in V$
+    is missed — yet $F(\{u\}) \le F(T)$ coordinatewise by construction, breaking separability.
+    Conclusion: you need one output coordinate per ground-set element.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 2 · upper bound, bounded $k$</div>
+    <div class="display-title">
+      For $k < n$, there exists a MAS function with $m = (k+2)^{k+2}\,\log n$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Random projection of the one-hot embedding. Start with the $n$-dimensional one-hot from
+    Theorem 1, then project onto $m$ random vectors with non-negative entries — non-negativity
+    preserves monotonicity automatically. A union bound over the worst-case "extreme pairs"
+    (a singleton $S$ vs.\ a near-full $T$ excluding that singleton) shows that with high
+    probability, $m = (k+2)^{k+2}\log n$ random projections separate every such pair.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 3 · lower bounds, bounded $k$</div>
+    <div class="display-title">
+      For $k \ge 2$ and $|V| = n$, $m^\star(V, k) \ge \log_2 \log_3 n$. Moreover, if
+      $k \le (n-1)/2$, then $m^\star(V, k) \ge 2k$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    The double-log bound is Erdős–Szekeres in disguise. Any real sequence of length $\ge N^2$
+    contains a monotone subsequence of length $N$. Apply this $m$ times to the singleton
+    embeddings — once per coordinate — and three elements $v_1, v_2, v_3$ eventually emerge that
+    are monotonically ordered in <em>every</em> coordinate. Then $\{v_2\}$ is dominated by
+    $\{v_1, v_3\}$, breaking separability — so $m$ must be large enough that the recursion
+    cannot run down to three. The $2k$ bound is Theorem 1's "max-element" argument refined for
+    bounded $k$.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Corollary 4 · infinite ground set</div>
+    <div class="display-title">
+      For $|V| = \infty$ and $k \ge 2$, no MAS function $F : \mathcal{P}_{\le k}(V) \to \mathbb{R}^m$
+      exists for any finite $m$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Theorem 3's lower bound $\log_2 \log_3 |V|$ diverges as $|V| \to \infty$, so no finite-dimensional
+    MAS function survives on $V = \mathbb{R}^d$. This is the gap the rest of the paper fills —
+    by relaxing to <em>weakly</em> MAS.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Ground set</th>
+        <th>Cardinality $k$</th>
+        <th>$m^\star(V, k)$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>$|V| = n < \infty$</td><td>$k = \infty$</td><td>$= n$</td></tr>
+      <tr>
+        <td>$|V| = n < \infty$</td>
+        <td>$2 \le k < n$</td>
+        <td>$\max\{2k,\, \log_2 \log_3 n\} \le m^\star \le \min\{n,\, (k+2)^{k+2}\log n\}$</td>
+      </tr>
+      <tr><td>$|V| = \infty$</td><td>$k = 1$</td><td>$= 2$</td></tr>
+      <tr><td>$|V| = \infty$</td><td>$k \ge 2$</td><td>does not exist</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figcaption><span class="num">Table 1.</span> Smallest embedding dimension admitting a MAS
+    function across the four regimes.</figcaption>
+
+  <div class="hr-orn"></div>
+
+  <!-- ============================================================
+       § 3 — HAT ACTIVATIONS
+  ============================================================ -->
+  <h2><span class="num">§ 3</span>Hat Activations</h2>
+
+  <p>
+    Since MAS does not exist on $V = \mathbb{R}^d$, we work with parametric set functions
+    $F(\cdot, w)$ that are pointwise monotone in $w$ and where every non-subset pair is separated
+    by <em>some</em> $w$. The right activation makes this possible in a single layer.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Definition 8 · Hat activation</div>
+    <div class="display-title">
+      $\sigma : \mathbb{R} \to \mathbb{R}$ is a Hat activation if it is (a) non-negative,
+      (b) compactly supported, (c) not identically zero, and (d) continuous.
+    </div>
+  </div>
+
+  <figure>
+    <!-- =======================================================
+         FIGURE 2 PLACEHOLDER — replace with paper Fig. 2
+    ======================================================= -->
+    <img src="masnet_fig2.png" alt="Figure 2">
+    <figcaption><span class="num">Figure 2.</span> Candidate scalar activations $\sigma$ for the
+      single-layer construction $F(S) = \sum_{x \in S} \sigma(a^\top x + b)$. Tanh fails
+      non-negativity (so monotonicity); ReLU is non-negative but monotone, which kills
+      separability in one layer (Proposition 6); TRI and smooth Hat are weakly MAS in one
+      layer.</figcaption>
+  </figure>
+
+  <div class="display">
+    <div class="display-label">Proposition 6 · monotone activations fail weak separability</div>
+    <div class="display-title">
+      If $\sigma$ is non-negative and monotonic (e.g.\ ReLU, sigmoid), then there exist
+      $S \not\subseteq T$ such that
+      $F(S; A, b) = M_2\!\big(\sum_{x \in S} \sigma(Ax + b)\big) \le F(T; A, b)$ for
+      <em>every</em> $(A, b)$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    The midpoint trick. Take $x \ne y$ and let $z = \tfrac{1}{2}(x + y)$, with $S = \{z\}$ and
+    $T = \{x, y\}$. Since $Az + b$ is the average of $Ax + b$ and $Ay + b$, a non-negative
+    monotone $\sigma$ forces $\sigma(Az + b) \le \sigma(Ax + b) + \sigma(Ay + b)$ pointwise — so
+    $F(S) \le F(T)$ for <em>every</em> parameter choice, even though $S \not\subseteq T$.
+    Monotonicity of $\sigma$ removes the ability to "spotlight" specific elements.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Proposition 9 · 1-layer Hat models are weakly MAS</div>
+    <div class="display-title">
+      If $M_2$ is strictly monotone and $\sigma$ is a Hat activation, then
+      $F(S; a, b) = M_2\!\big(\sum_{x \in S} \sigma(a^\top x + b)\big)$ is weakly MAS.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Compact support is the spotlight. If $S \not\subseteq T$, some element $s$ has higher
+    multiplicity in $S$ than in $T$; tune $(a, b)$ so the hat's support contains $s$ but
+    excludes the elements of $T$ near $s$. Then $\sigma$ fires for every copy of $s$ in $S$ and
+    stays near zero on $T$, giving $F(S) > F(T)$. A monotone activation cannot be tuned this
+    selectively — that is the difference Proposition 6 captures.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Proposition 10 · 2-layer ReLU is weakly MAS</div>
+    <div class="display-title">
+      For $V \subseteq \mathbb{R}^d$, $A_2 : \mathbb{R}^d \to \mathbb{R}^3$,
+      $A_1 : \mathbb{R}^3 \to \mathbb{R}$, the function
+      $F(S; A_1, A_2) = M_2\!\big(\sum_{x \in S} \mathrm{ReLU} \circ A_1 \circ \mathrm{ReLU}
+        \circ A_2(x)\big)$ is weakly MAS.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Two-layer ReLU networks can <em>simulate</em> a hat. Concretely,
+    $\mathrm{TRI}(x) = \mathrm{ReLU}\big(\mathrm{ReLU}(2x) + \mathrm{ReLU}(2x - 2)
+      - \mathrm{ReLU}(4x - 2)\big)$ is a triangular hat built from three ReLUs. Depth recovers in
+    two layers what compact support gives in one — so MASNET can use either Hat activations
+    (Proposition 9) or deeper ReLU MLPs (this proposition) and get the same guarantees.
+  </p>
+
+  <div class="hr-orn"></div>
+
+  <!-- ============================================================
+       § 4 — STABILITY
+  ============================================================ -->
+  <h2><span class="num">§ 4</span>Asymmetric Distance and Hölder Stability</h2>
+
+  <p>
+    Weak separability is Boolean. For a graded statement — almost-containment maps to
+    almost-domination — we need an asymmetric notion of how far $S$ is from being a subset of $T$.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Definition · asymmetric set distance</div>
+    <div class="display-title">
+      For $S, T$ with $|S| \le |T|$,
+      $\;\Delta(S, T) \;=\; \min_{T' \subseteq T,\; |T'| = |S|}\; \mathrm{EMD}(S, T').$
+    </div>
+    <div class="display-body">
+      <p>$\Delta(S, T) = 0$ iff $S \subseteq T$; small $\Delta$ formalizes approximate
+      containment.</p>
+    </div>
+  </div>
+
+  <div class="display">
+    <div class="display-label">Definition 11 · lower Hölder separability</div>
+    <div class="display-title">
+      $F(\cdot, w)$ with $w \sim \mu$ is <em>$\lambda$ lower Hölder separable</em> if for some
+      $c > 0$,
+      $\mathbb{E}_{w}\!\big\| [F(S; w) - F(T; w)]_+ \big\|_1 \ge c \cdot \Delta(S, T)^\lambda$
+      for all $S, T \in \mathcal{P}_{\le k}(V)$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Weak separability only guarantees that <em>some</em> $w$ separates — but that "some" could
+    be a measure-zero slice of parameter space. Lower Hölder upgrades the statement: the
+    expected witness mass (the hinge-clipped excess of $F(S)$ over $F(T)$) scales as a power of
+    the asymmetric distance $\Delta(S, T)$. Separation is not just possible but
+    <em>measurable</em>, and grows gracefully with how far $S$ is from being inside $T$.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 12 · Hat models are lower Hölder, $\lambda = 2$</div>
+    <div class="display-title">
+      For compact $V \subset \mathbb{R}^d$, $\sigma$ a piecewise-$C^1$ Hat activation with positive
+      right-derivative at the left endpoint of its support, and $M_2$ lower Lipschitz, the function
+      $F(S; (a, b, c)) = M_2\!\big(\sum_{x \in S} \sigma((a^\top x + b)/c)\big)$ with
+      $a \sim \mathrm{Unif}(S^{d-1})$, $b \sim \mathrm{Unif}([-1, 1])$,
+      $c \sim \mathrm{Unif}((0, 2])$ is lower Hölder separable with exponent $\lambda = 2$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    Random hat units parameterised by $(a, b, c)$ produce expected witness mass at least
+    $c \cdot \Delta(S, T)^2$. The exponent 2 has a clean reading: the hat's support has linear
+    width (contributing one factor of $\Delta$) and a positive derivative at the left edge
+    (contributing the second). The conclusion: Hat-based MASNET is graded-stable, not just
+    Boolean-separable.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 13 · exponential separation in $m$</div>
+    <div class="display-title">
+      Stacking $m$ i.i.d.\ Hat units as in Theorem 12, there exists $C > 0$ such that for all
+      $S \not\subseteq T$,
+      $\mathbb{P}\!\left( F(S) \le F(T) \right) \le \left( 1 - C\,\Delta(S, T)^2 \right)^m.$
+    </div>
+  </div>
+
+  <p class="intuition">
+    Each hat unit independently separates any non-subset pair with probability at least
+    $C \cdot \Delta(S, T)^2$. With $m$ independent units, the chance that all of them fail is at
+    most $(1 - C\Delta^2)^m$ — exponentially small in $m$. Two takeaways: more embedding
+    dimensions sharpen separation, and pairs farther from containment are easier to separate.
+  </p>
+
+  <div class="display">
+    <div class="display-label">Theorem 14 · universality on finite $V$</div>
+    <div class="display-title">
+      For finite $V$ and any MAS function $F : \mathcal{P}_{\le k}(V) \to \mathbb{R}^m$, every
+      monotone set function $f : \mathcal{P}_{\le k}(V) \to \mathbb{R}^s$ factors as
+      $f = M \circ F$ for some monotone vector-to-vector $M : \mathbb{R}^m \to \mathbb{R}^s$.
+    </div>
+  </div>
+
+  <p class="intuition">
+    On a finite ground set, MAS is a <em>complete</em> inductive bias for monotone set functions.
+    Compose any MAS encoder $F$ with a universal monotone vector-to-vector network (e.g.\ the
+    monotonic nets of Sill, 1997) and you recover the entire class of monotone set functions —
+    $F$ carries all the structural information; the downstream net handles the rest.
+  </p>
+
+  <div class="hr-orn"></div>
+
+  <!-- ============================================================
+       § 5 — MASNET
+  ============================================================ -->
+  <h2><span class="num">§ 5</span>MASNET</h2>
+
+  <p style="text-align: center; font-size: 1.05rem; margin: 1.6rem 0;">
+    $\mathrm{MASNET}(S) \;=\; M_{\theta_2}\!\left( \sum_{x \in S} \sigma\!\left( M_{\theta_1}(x) \right) \right)$
+  </p>
+
+  <p>
+    $M_{\theta_2}$ is the identity (or any monotone map); $M_{\theta_1}$ is an MLP whose depth
+    and activation define the variant.
+  </p>
+
+  <div class="variants">
+    <div class="variant">
+      <span class="variant-name">MASNET-Hat</span>
+      Single-layer $M_{\theta_1}$ + parametric Hat
+      $\sigma_{\alpha, \beta, \gamma}(x)
+        = \mathrm{ReLU}\!\big(\tfrac{x - \alpha}{\gamma\beta}\big)
+        + \mathrm{ReLU}\!\big(\tfrac{x - (\alpha + \beta)}{(1-\gamma)\beta}\big)
+        - \mathrm{ReLU}\!\big(\tfrac{x - (\alpha + \gamma\beta)}{\gamma(1-\gamma)\beta}\big)$,
+      a hat with support $[\alpha, \alpha + \beta]$. Adds $3m$ parameters.
+    </div>
+    <div class="variant">
+      <span class="variant-name">MASNET-ReLU</span>
+      $M_{\theta_1}$ is a ≥2-layer ReLU MLP (Proposition 10). Easier to train, best overall when
+      depth is available.
+    </div>
+    <div class="variant">
+      <span class="variant-name">MASNET-TRI</span>
+      Uses the TRI activation (Figure 2, panel 3).
+    </div>
+    <div class="variant">
+      <span class="variant-name">MASNET-INT</span>
+      Universal hat-class variant: models $\sigma'$ as a small net and approximates the
+      antiderivative.
+    </div>
+  </div>
+
+  <p>
+    Trained with the margin hinge loss on labeled containment pairs $y(S, T) \in \{0, 1\}$:
+  </p>
+  <p style="text-align: center; font-size: 1rem;">
+    $\sum_{S, T}
+      (1 - y) \cdot \min_{i} [F(S)[i] - F(T)[i] + \delta]_+
+      \;+\; y \cdot \max_{i} [F(S)[i] - F(T)[i] + \delta]_+.$
+  </p>
+
+  <div class="hr-orn"></div>
+
+  <!-- ============================================================
+       § 6 — EXPERIMENTS
+  ============================================================ -->
+  <h2><span class="num">§ 6</span>Experiments</h2>
+
+  <p>
+    Four set-containment tasks: synthetic Gaussians, text bag-of-words, ModelNet40 point clouds,
+    and monotone function approximation. Baselines: DeepSets (DS), Set Transformer (ST),
+    FlexSubNet, Neural SFE.
+  </p>
+
+  <!-- Synthetic -->
+  <h3>Synthetic Gaussians</h3>
+  <p>
+    Targets $T \subset \mathbb{R}^d$ sampled i.i.d.\ $\sim \mathcal{N}(0, I)$, $d = 4$;
+    positives are random subsets, negatives are fresh i.i.d.\ samples; $m = 256$.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>$|S|$</th><th>$|T|$</th>
+        <th class="center">DS</th>
+        <th class="center">ST</th>
+        <th class="center">M-ReLU</th>
+        <th class="center">M-Hat</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>2</td>   <td class="center">0.98</td><td class="center">0.98</td><td class="center"><strong>0.99</strong></td><td class="center"><strong>0.99</strong></td></tr>
+      <tr><td>1</td><td>10</td>  <td class="center">0.59</td><td class="center">0.59</td><td class="center"><strong>0.99</strong></td><td class="center"><strong>0.99</strong></td></tr>
+      <tr><td>10</td><td>30</td> <td class="center">0.89</td><td class="center">0.80</td><td class="center"><strong>1.00</strong></td><td class="center"><strong>1.00</strong></td></tr>
+      <tr><td>10</td><td>100</td><td class="center">0.54</td><td class="center">0.57</td><td class="center">0.98</td><td class="center"><strong>0.99</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figcaption><span class="num">Table 3.</span> Accuracy on synthetic data. MASNET stays
+    near-perfect as the cardinality gap widens; baselines collapse to chance.</figcaption>
+
+  <figure>
+    <!-- =======================================================
+         FIGURE 4 PLACEHOLDER — replace with paper Fig. 4
+    ======================================================= -->
+    <img src="masnet_fig4.png" alt="Figure 4">
+    <figcaption><span class="num">Figure 4.</span> Single-layer comparison: 1layerM-Hat
+      significantly outperforms 1layer-ReLU, validating Proposition 6. Accuracy declines as $|T|$
+      grows for both — the gap $|T \setminus S|$ makes separability harder.</figcaption>
+  </figure>
+
+  <!-- Text -->
+  <h3>Text bag-of-words containment</h3>
+  <p>
+    MSWEB, MSNBC, Amazon-Bedding, Amazon-Feeding. BERT vocabulary embeddings ($d = 768$);
+    Gaussian noise std 0.01 on $S$; class ratio 1:1; $m = 50$.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th class="center">Bedding</th>
+        <th class="center">Feeding</th>
+        <th class="center">MSWEB</th>
+        <th class="center">MSNBC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>DeepSets</td>        <td class="center">0.51</td><td class="center">0.50</td><td class="center">0.88</td><td class="center">0.67</td></tr>
+      <tr><td>SetTransformer</td>  <td class="center">0.77</td><td class="center">0.79</td><td class="center">0.90</td><td class="center">0.94</td></tr>
+      <tr><td>FlexSubNet</td>      <td class="center">0.88</td><td class="center">0.85</td><td class="center">0.92</td><td class="center">0.91</td></tr>
+      <tr><td>Neural SFE</td>      <td class="center">0.52</td><td class="center">0.53</td><td class="center">0.88</td><td class="center">0.66</td></tr>
+      <tr><td>MASNET-ReLU</td>     <td class="center"><strong>0.98</strong></td><td class="center"><strong>0.98</strong></td><td class="center"><strong>0.99</strong></td><td class="center"><strong>0.97</strong></td></tr>
+      <tr><td>MASNET-Hat</td>      <td class="center">0.94</td><td class="center">0.93</td><td class="center">0.97</td><td class="center">0.95</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figcaption><span class="num">Table 5.</span> Accuracy on four text datasets (1:1 ratio).
+    MASNET-ReLU leads everywhere; MASNET-Hat is a close second.</figcaption>
+
+  <!-- Point clouds -->
+  <h3>Point clouds on ModelNet40</h3>
+  <p>
+    $|T| = 1024$ points per object; positives subsample $S \subseteq T$, negatives draw from a
+    different category; PointNet encoder; $m = 50$; noise std 0.005.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th class="center">$|S| = 128$</th>
+        <th class="center">$|S| = 256$</th>
+        <th class="center">$|S| = 512$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>DeepSets</td>       <td class="center">0.52</td><td class="center">0.51</td><td class="center">0.50</td></tr>
+      <tr><td>SetTransformer</td> <td class="center">0.62</td><td class="center">0.51</td><td class="center">0.50</td></tr>
+      <tr><td>FlexSubNet</td>     <td class="center">0.84</td><td class="center">0.75</td><td class="center">0.60</td></tr>
+      <tr><td>Neural SFE</td>     <td class="center">0.52</td><td class="center">0.51</td><td class="center">0.50</td></tr>
+      <tr><td>MASNET-ReLU</td>    <td class="center"><strong>0.98</strong></td><td class="center"><strong>0.94</strong></td><td class="center"><strong>0.72</strong></td></tr>
+      <tr><td>MASNET-Hat</td>     <td class="center">0.87</td><td class="center">0.81</td><td class="center">0.65</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figcaption><span class="num">Table 6.</span> Point-cloud containment accuracy on ModelNet40
+    across $|S|$ at fixed $|T| = 1024$.</figcaption>
+
+  <figure>
+    <!-- ============================================================
+         FIGURES 8 & 9 PLACEHOLDER — single screenshot, both panels
+    ============================================================ -->
+    <img src="masnet_fig89.png" alt="Figures 8 and 9">
+    <figcaption>
+      <span class="num">Figures 8 &amp; 9.</span>
+      [Edit this caption — describe what panel (a) Figure 8 shows and what panel (b) Figure 9
+      shows, with the takeaway for each.]
+    </figcaption>
+  </figure>
+
+  <!-- Monotone approx -->
+  <h3>Monotone function approximation</h3>
+  <p>
+    Train a scalar MASNET to regress a held-out monotone target $F^\star$. MAS as a useful
+    inductive bias outside containment.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Method</th><th class="center">Test MAE</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>DeepSets</td>       <td class="center">$0.01024 \pm 0.00030$</td></tr>
+      <tr><td>SetTransformer</td> <td class="center">$0.01026 \pm 0.00033$</td></tr>
+      <tr><td>MASNET-ReLU</td>    <td class="center">$0.01023 \pm 0.00107$</td></tr>
+      <tr><td>MASNET-Hat</td>     <td class="center"><strong>$0.00959 \pm 0.00016$</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <figcaption><span class="num">Table 7.</span> Test MAE on monotone set-function approximation.
+    Consistent with the universality result (Theorem 14).</figcaption>
+
+  <!-- ============================================================
+       § 7 — CITE
+  ============================================================ -->
+  <h2 id="bibtex"><span class="num">§ 7</span>Cite</h2>
+<pre class="bibtex">@inproceedings{
+sarangi2026monotone,
+title={Monotone and Separable Set Functions: Characterizations and Neural Models},
+author={SOUTRIK SARANGI and Yonatan Sverdlov and Nadav Dym and Abir De},
+booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems},
+year={2026},
+url={https://openreview.net/forum?id=RSSk1SHxrH}
+}</pre>
+
+  <!-- ============================================================
+       § 8 — CONTACT
+  ============================================================ -->
+  <h2 id="contact"><span class="num">§ 8</span>Contact</h2>
+
+  <p>For questions or collaboration, reach out to any of the authors.</p>
+
+  <div class="contact-grid">
+    <a href="mailto:soutriksarangi14@gmail.com">Soutrik Sarangi</a>
+    <a href="mailto:yonatans@campus.technion.ac.il">Yonatan Sverdlov</a>
+    <a href="mailto:nadavdym@technion.ac.il">Nadav Dym</a>
+    <a href="mailto:abir@cse.iitb.ac.in">Abir De</a>
+  </div>
+
+  <footer class="colophon">
+    Set in Fraunces &amp; Crimson Pro. Math by MathJax.
+    Code at <a href="https://github.com/structlearning/MASNET">structlearning/MASNET</a>.
+    <a href="https://openreview.net/pdf?id=RSSk1SHxrH">Read the paper.</a>
+  </footer>
+
+</main>
+</body>
+</html>
